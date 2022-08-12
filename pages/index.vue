@@ -106,13 +106,6 @@
 <script>
 import axios from 'axios';
 import { mapActions } from "vuex";
-import LogoLicious from "~/assets/images/LogoLicious.png";
-import meal1 from "~/assets/images/meal-1.jpg";
-import meal2 from "~/assets/images/meal-2.jpg";
-import meal3 from "~/assets/images/meal-3.jpg";
-import meal4 from "~/assets/images/meal-4.jpg";
-import meal5 from "~/assets/images/meal-5.jpg";
-import meal0 from "~/assets/images/meal-6.jpg";
 import plus from "~/assets/icon/plus.svg";
 import minus from "~/assets/icon/minus.svg";
 export default {
@@ -122,16 +115,9 @@ export default {
   },
   data() {
     return {
-      meal1,
-      meal2,
-      meal3,
-      meal4,
-      meal5,
-      meal0,
       modalProduct: {},
       modalVisible: false,
       count: 1,
-      LogoLicious,
       currentRate: 0,
       products: []
     };
@@ -145,42 +131,29 @@ export default {
       console.log("authors", authors);
 
       this.products = authors
-      // return { authors }
     },
 
-    numberWithCommas(x) {
-      if (!x) {
-        return;
-      }
+    // numberWithCommas(x) {
+    //   if (!x) {
+    //     return;
+    //   }
 
-      x = x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    //   x = x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-      console.log("numberWithCommas", x);
-    },
+    //   console.log("numberWithCommas", x);
+    // },
 
-    async convertToNGN(price) {
-      const rate = await axios
-        .get(process.env.BASE_URL + "?base=USD")
-        .then(res => res.data)
+    // async convertToNGN(price) {
+    //   const rate = await axios
+    //     .get(process.env.BASE_URL + "?base=USD")
+    //     .then(res => res.data)
 
-      console.log('rate', rate.rates.NGN * price);
+    //   console.log('rate', rate.rates.NGN * price);
 
-      price = rate.rates.NGN * price
+    //   price = rate.rates.NGN * price
 
-      this.numberWithCommas(price)
-    },
-
-
-
-    fformatPrice(price) {
-      if (!price) {
-        return
-      }
-      price = price.substring(1);
-
-      console.log("formatPrice", price);
-      this.convertToNGN(price)
-    },
+    //   this.numberWithCommas(price)
+    // },
 
     async formatPrice(price) {
       if (!price) {
@@ -189,7 +162,6 @@ export default {
       price = price.substring(1);
 
       console.log("formatPrice", price);
-      // this.convertToNGN(price)
 
       await axios
         .get(process.env.BASE_URL + "?base=USD")
@@ -207,8 +179,6 @@ export default {
         }, (error) => {
           console.log(error);
         });
-
-
     },
 
     setProductDetails(product) {
@@ -246,7 +216,6 @@ export default {
   },
   mounted() {
     this.getItems()
-    this.convertToNGN()
   }
 };
 </script>

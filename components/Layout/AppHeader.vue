@@ -19,7 +19,7 @@
         </a-col>
         <a-space />
         <a-col :span="12">
-          <a-input class="coloured" v-model="search" placeholder="Search for your favourite meals">
+          <a-input class="coloured" v-model="search" placeholder="Search for your favourite products">
             <a-icon slot="prefix" type="search" />
           </a-input>
         </a-col>

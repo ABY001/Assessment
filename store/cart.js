@@ -51,15 +51,8 @@ export const mutations = {
         });
     },
     UPDATE_CART(state, { product, quantity }) {
-        // let Product = state.storeCart.findIndex((item) => {
-        //     item.product._id === product._id;
-        // });
-        // console.log("index:::::", Product + 1);
-
-        // state.storeCart[Product + 1].quantity = quantity
 
         let productInCart = state.storeCart.find((item) => {
-            // console.log(item.product._id, product);
             return item.product.name === product.name;
         });
 
