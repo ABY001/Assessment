@@ -50,11 +50,9 @@
       <a-button block type="" style="width: 200px; height: 45px; margin-right: 10px" @click="clearCart">
         CLEAR CART
       </a-button>
-      <nuxt-link to="/checkout/delivery">
-        <a-button block type="primary" style="width: 200px; height: 45px">
-          CONTINUE
-        </a-button>
-      </nuxt-link>
+      <a-button block :loading="loading" type="primary" style="width: 200px; height: 45px" @click="payNow">
+        PAY NOW
+      </a-button>
     </a-row>
   </div>
 </template>
@@ -65,11 +63,15 @@ import deletes from "~/assets/icon/deletes.svg";
 import plus from "~/assets/icon/plus.svg";
 import minus from "~/assets/icon/minus.svg";
 export default {
-  layout: "checkout",
   components: {
     plus,
     minus,
     deletes
+  },
+  data() {
+    return {
+      loading: false
+    }
   },
   computed: {
     cartItems() {
@@ -100,6 +102,18 @@ export default {
     },
     clearCart() {
       this.clearCartItems()
+    },
+    payNow() {
+      this.loading = true
+      this.clearCartItems()
+      this.$notification.success({
+        message: "Success",
+        description: "Cart has been cleared successfully",
+      });
+      setTimeout(() => {
+        this.loading = false
+        this.$router.push("/");
+      }, 1000);
     }
   },
 };

@@ -1,15 +1,12 @@
+import * as axios from "axios";
+
 let baseURL;
 
-if (!process.env.NODE_ENV || process.env.NODE_ENV === "production") {
-  baseURL =
-    "https://backend.htmlfoods.org/" || "https://htmlfood.herokuapp.com";
-} else {
-  baseURL = "https://htmlfood.herokuapp.com";
-}
+baseURL = "https://api.exchangerate.host/latest";
+const options = {
+  withCredentials: true,
+};
 
-export default function ({ $axios }, inject) {
-  const axios = $axios.create({
-    baseURL: baseURL
-  });
-  inject("axios", axios);
-}
+options.baseURL = baseURL;
+
+export default axios.create(options);

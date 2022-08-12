@@ -1,15 +1,13 @@
 <template>
-  <a-layout-sider
-    :style="{
-      overflow: 'auto',
-      maxWidth: '230px',
-      width: '230px',
-      height: '100vh',
-      position: 'fixed',
-      left: 0,
-      paddingTop: '5rem',
-    }"
-  >
+  <a-layout-sider :style="{
+    overflow: 'auto',
+    maxWidth: '230px',
+    width: '230px',
+    height: '100vh',
+    position: 'fixed',
+    left: 0,
+    paddingTop: '5rem',
+  }">
     <a-row class="restaurant">
       Restuarants <span class="coming"> Coming Soon </span>
     </a-row>

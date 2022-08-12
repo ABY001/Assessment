@@ -11,50 +11,28 @@
         </a-col>
 
         <a-col :span="3">
-          <a-button
-            icon="environment"
-            class="button-coloured"
-            :style="{ color: '#c22429', fontWeight: '500' }"
-          >
-            <span style="margin-left: 15px"> Your location </span>
-          </a-button>
+          <nuxt-link to="/my-location">
+            <a-button icon="environment" class="button-coloured" :style="{ color: '#c22429', fontWeight: '500' }">
+              <span style="margin-left: 15px"> Your location </span>
+            </a-button>
+          </nuxt-link>
         </a-col>
         <a-space />
-        <a-col :span="10">
-          <a-input
-            class="coloured"
-            v-model="search"
-            placeholder="Search for your favourite meals"
-          >
+        <a-col :span="12">
+          <a-input class="coloured" v-model="search" placeholder="Search for your favourite meals">
             <a-icon slot="prefix" type="search" />
           </a-input>
         </a-col>
         <a-space />
         <a-col :span="2">
           <nuxt-link to="/checkout/cart">
-            <a-button
-              icon="shopping-cart"
-              class="button-coloured"
-              :style="{ color: '#c22429', fontWeight: '500' }"
-            >
+            <a-button icon="shopping-cart" class="button-coloured" :style="{ color: '#c22429', fontWeight: '500' }">
               <span class="cart-number">
                 {{ cartItemCount }}
               </span>
               <span style="margin-left: 15px"> Cart </span>
             </a-button>
           </nuxt-link>
-        </a-col>
-
-        <a-col :span="2">
-          <nuxt-link to="/login">
-            <a-button
-              icon="user"
-              class="button-coloured"
-              :style="{ color: '#c22429', fontWeight: '500' }"
-            >
-              <span style="margin-left: 15px"> Log in</span>
-            </a-button></nuxt-link
-          >
         </a-col>
       </a-row>
     </div>
@@ -94,12 +72,14 @@ export default {
   margin: 0 auto;
   position: relative;
 }
+
 .coloured .ant-input {
   background: rgba(196, 45, 50, 0.1) !important;
   border-radius: 5px;
   border: none;
   height: 38px;
 }
+
 .cart-number {
   position: absolute;
   top: 4px;

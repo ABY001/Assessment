@@ -27,14 +27,13 @@ export default {
   plugins: [
     { src: '~/plugins/antd-ui' },
     // { src: "~/plugins/axios" },
+    { src: "~/plugins/google-maps" },
     { src: "~/plugins/persistedState.client.js" }
   ],
 
+
   axios: {
-    baseURL:
-      process.env.NODE_ENV === "production"
-        ? process.env.BASE_URL
-        : `https://htmlfood.herokuapp.com`
+    baseURL: process.env.BASE_URL
   },
 
   auth: {
@@ -54,7 +53,7 @@ export default {
   },
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth"],
+  modules: ["@nuxtjs/axios"],
 
   // router: {
   //   middleware: ["auth"]
@@ -67,12 +66,20 @@ export default {
   buildModules: [
   ],
 
+  env: {
+    LOCAL_URL: 'http://localhost:3000',
+    BASE_URL : "https://api.exchangerate.host/latest",
+    GOOGLE_MAP_KEY : "AIzaSyAAEcOY98veCESLeA_jchHtkPzmDPO1d-w"
+  },
+
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    transpile: [/^vue2-google-maps($|\/)/],
     extend: (config) => {
       const svgRule = config.module.rules.find(rule => rule.test.test('.svg'));
 

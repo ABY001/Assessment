@@ -33,25 +33,13 @@ export default {
     };
   },
   computed: {
-    log() {
-      return this.$store.state.cart.isLoggedIn;
-    },
+
   },
   created() {
-    this.routeCheck();
+
   },
   methods: {
-    routeCheck() {
-      if (!this.log) {
-        setTimeout(() => {
-          this.$notification.success({
-            message: "Success",
-            description: "You're not logged in",
-          });
-          this.$router.push("/login");
-        }, 1000);
-      }
-    },
+
   },
 };
 </script>
