@@ -164,7 +164,7 @@ export default {
       console.log("formatPrice", price);
 
       await axios
-        .get(process.env.BASE_URL + "?base=USD")
+        .get(process.env.RATE_URL + "?base=USD")
         .then(res => {
           const rate = res.data
           console.log('rate', rate.rates.NGN * price);

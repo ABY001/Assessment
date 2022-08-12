@@ -33,7 +33,7 @@ export default {
 
 
   axios: {
-    baseURL: process.env.BASE_URL
+    baseURL: process.env.RATE_URL
   },
 
   auth: {
@@ -67,9 +67,10 @@ export default {
   ],
 
   env: {
-    LOCAL_URL: 'http://localhost:3000',
-    BASE_URL : "https://api.exchangerate.host/latest",
-    GOOGLE_MAP_KEY : "AIzaSyAAEcOY98veCESLeA_jchHtkPzmDPO1d-w"
+    LOCAL_URL: process.env.NODE_ENV === "production"
+      ? process.env.BASE_URL : 'http://localhost:3000',
+    RATE_URL: "https://api.exchangerate.host/latest",
+    GOOGLE_MAP_KEY: "AIzaSyAAEcOY98veCESLeA_jchHtkPzmDPO1d-w"
   },
 
 
