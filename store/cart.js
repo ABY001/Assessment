@@ -11,7 +11,7 @@ export const getters = {
         let total = 0;
 
         state.storeCart.forEach((item) => {
-            total += item.product.price * item.quantity;
+            total += item.product.price * item.count;
         });
 
         return total;
@@ -20,10 +20,10 @@ export const getters = {
 export const mutations = {
     ADD_TO_CART(
         state,
-        { product, quantity, name, price, preprice }
+        { product, quantity, count, name, price }
     ) {
         let productInCart = state.storeCart.find((item) => {
-            return item.product._id === product._id;
+            return item.product.name === product.name;
         });
 
         if (productInCart) {
@@ -34,9 +34,9 @@ export const mutations = {
         state.storeCart.push({
             product,
             quantity,
+            count,
             name,
             price,
-            preprice,
         });
     },
     SET_CART(state, cartItems) {
@@ -47,7 +47,7 @@ export const mutations = {
     },
     REMOVE_PRODUCT_FROM_CART(state, product) {
         state.storeCart = state.storeCart.filter((item) => {
-            return item.product._id !== product._id;
+            return item.product.name !== product.name;
         });
     },
     UPDATE_CART(state, { product, quantity }) {
@@ -60,7 +60,7 @@ export const mutations = {
 
         let productInCart = state.storeCart.find((item) => {
             // console.log(item.product._id, product);
-            return item.product._id === product._id;
+            return item.product.name === product.name;
         });
 
         console.log(productInCart);
@@ -83,14 +83,14 @@ export const actions = {
     },
     addProductToCart: (
         { commit },
-        { product, quantity, name, price, preprice }
+        { product, quantity, count, name, price, }
     ) => {
         commit("ADD_TO_CART", {
             product,
             quantity,
+            count,
             name,
             price,
-            preprice,
         });
     },
     removeProductFromCart: ({ commit }, product) => {
@@ -102,12 +102,4 @@ export const actions = {
     clearCartItems: ({ commit }) => {
         commit("CLEAR_CART_ITEMS");
     },
-    // checkOut: ({ commit }, { $axios, $router }) => {
-    //   return $axios.put(`/v1/product/cart/${this.$route.params.id}`, {
-    //     name: this.singleProduct.name,
-    //     number: this.quantity,
-    //     price: this.singleProduct.cost,
-    //     preprice: this.singleProduct.cover,
-    //   });
-    // },
 };

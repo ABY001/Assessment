@@ -88,14 +88,20 @@ export default {
     },
     ...mapActions("cart", ["updateCart", "clearCartItems", "removeProductFromCart"]),
     updateCount(product, quantity, ops) {
-      let newCount;
+      let newCount, baseQuantity, count;
+      baseQuantity = product.quantity;
+      count = quantity / baseQuantity;
+      console.log('baseQuantity', baseQuantity, 'count', count);
+
       if (ops) {
-        newCount = quantity + 1;
+        newCount = count + 1;
       } else {
-        newCount = quantity - 1;
+        if (count == 0) return
+        newCount = count - 1;
       }
-      console.log(newCount, product);
-      this.updateCart({ product: product, quantity: newCount });
+      let newQuantity = baseQuantity * newCount
+      console.log(newCount, newQuantity, product);
+      this.updateCart({ product: product, quantity: newQuantity });
     },
     deleteCount(product) {
       this.removeProductFromCart(product)

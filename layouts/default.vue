@@ -2,10 +2,8 @@
   <a-layout id="components-layout-demo-fixed-sider">
     <app-header />
     <a-layout>
-      <app-sidebar />
+      <!-- <app-sidebar /> -->
       <a-layout :style="{
-        marginLeft: '230px',
-        height: 'calc(100vh - 96px)',
         background: 'rgba(242, 242, 242, 0.8)',
       }">
         <a-layout-content :style="{ overflow: 'initial', height: '100%' }">

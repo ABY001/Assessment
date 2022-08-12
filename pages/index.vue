@@ -1,49 +1,42 @@
 <template>
   <div>
-    <a-row type="flex" justify="center" style="margin: 10px auto">
-      <a-col :lg="{ span: 18 }" :xs="{ span: 24 }">
-        <a-row type="flex" justify="space-between">
-          <a-col v-for="day in days" :key="day.id">
-            <a-tag class="button-coloured" :style="{ color: '#c22429', fontWeight: '500' }">
-              {{ day.name }}
-            </a-tag>
-          </a-col>
-        </a-row>
-      </a-col>
-    </a-row>
-
     <a-row type="flex" style="margin-bottom: 1rem">
       <a-col :lg="{ span: 24 }" :xs="{ span: 24 }">
-        <div class="title-head">Today’s menu</div>
+        <div class="title-head">Product list ({{ products.length }})</div>
       </a-col>
     </a-row>
 
     <a-row type="flex" justify="space-between" v-if="products.length >= 1">
-      <a-col :lg="{ span: 8 }" :sm="{ span: 22 }" :xs="{ span: 24 }" v-for="(product, index) in products" :key="index">
+      <a-col :lg="{ span: 8 }" :sm="{ span: 12 }" :xs="{ span: 24 }" v-for="(product, index) in products" :key="index">
+
         <a-card :bordered="false" class="card-major" @click="setProductDetails(product)">
           <a-row>
             <a-col :span="24">
               <div class="meal_card">
-                <img :src="product.image" alt="Meal Image" width="100%" style="border-radius: 12px 12px 0px 0px" />
-                <div class="discount">{{ product.discount }}</div>
+                <img :src="product?.image?.src" :alt="product?.image?.alt" width="100%" height="100%"
+                  style="border-radius: 12px 12px 0px 0px" />
+                <!-- <div class="discount">{{ product.discount }}</div> -->
               </div>
             </a-col>
 
-            <a-col :span="24" style="margin: auto 15px">
-              <a-row class="meal__title" type="flex" justify="start">
-                {{ product.name }}
+            <a-col :span="24" style="margin: auto; padding: 5px 15px;">
+              <a-row class="meal__title" type="flex" justify="space-between">
+                {{ product?.name }}
+                <span> Quantity:
+                  <span class="preprice">
+                    {{ product.quantity }}
+                  </span>
+                </span>
               </a-row>
               <a-row type="flex" justify="start">
                 <span class="ratings">
                   <a-icon type="star" theme="filled" :style="{ color: '#FFC107', margin: '2px' }" />
-                  {{ product.rating }}
+                  4.5
                 </span>
               </a-row>
               <a-row class="" type="flex" justify="start">
-                <span class="price">&#8358;{{ numberWithCommas(product.price) }}</span>
-                <span class="preprice">
-                  <s>{{ numberWithCommas(product.preprice) }}</s>
-                </span>
+                <span class="price">&#8358;{{ formatPrice(product?.price) }}</span>
+
               </a-row>
             </a-col>
           </a-row>
@@ -62,14 +55,15 @@
       class="card-modal">
       <a-row>
         <a-col :span="24">
-          <div class="modal-title">{{ modalProduct.name }}</div>
+          <div class="modal-title">{{ modalProduct?.name }}</div>
         </a-col>
       </a-row>
       <a-row>
         <a-col :span="24">
           <div class="meal_card">
-            <img :src="modalProduct.image" alt="Meal Image" width="100%" style="border-radius: 12px 12px 0px 0px" />
-            <div class="discount">{{ modalProduct.discount }}</div>
+            <img :src="modalProduct?.image?.src" :alt="modalProduct?.image?.alt" width="100%" height="100%"
+              style="border-radius: 12px 12px 0px 0px" />
+            <!-- <div class="discount">{{ modalProduct.discount }}</div> -->
           </div>
         </a-col>
 
@@ -77,18 +71,19 @@
           <a-row type="flex" justify="space-between" style="margin: 13px 0">
             <span class="ratings" style="font-size: 16px">
               <a-icon type="star" theme="filled" :style="{ color: '#FFC107', marginRight: '2px' }" />
-              {{ modalProduct.rating }}
+              4.5
             </span>
             <div style="display: flex; align-items: center">
               <plus @click="count++" style="cursor: pointer" />
               <span style="font-weight: bold; font-size: 18px; margin: auto 10px">
-                {{ count }}
+                {{ count }}x
               </span>
               <minus @click="count--" style="cursor: pointer" />
             </div>
           </a-row>
-          <a-row class="meal_price" type="flex" justify="start">
-            <span class="price">&#8358;{{ numberWithCommas(modalProduct.price) }}</span>
+          <a-row class="meal_price" type="flex" justify="space-between">
+            <span class="price">&#8358;{{ formatPrice(modalProduct?.price) }}</span>
+            <span style="font-weight: bold; font-size: 18px;">Total Quantity: {{ count * modalProduct.quantity }}</span>
           </a-row>
           <a-row class="meal_actions" type="flex" justify="space-between">
             <a-col :span="11">
@@ -109,6 +104,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapActions } from "vuex";
 import LogoLicious from "~/assets/images/LogoLicious.png";
 import meal1 from "~/assets/images/meal-1.jpg";
@@ -136,104 +132,95 @@ export default {
       modalVisible: false,
       count: 1,
       LogoLicious,
-      days: [
-        {
-          id: "1",
-          name: "Monday",
-        },
-        {
-          id: "2",
-          name: "Tuesday",
-        },
-        {
-          id: "3",
-          name: "Wednesday",
-        },
-        {
-          id: "4",
-          name: "Thursday",
-        },
-        {
-          id: "5",
-          name: "Friday",
-        },
-        {
-          id: "6",
-          name: "Saturday",
-        },
-      ],
-      products: [
-        {
-          _id: 1,
-          image: meal0,
-          name: "CITIZENS MEAL",
-          rating: "4.5",
-          price: 1500,
-          preprice: 2000,
-          discount: "-4%",
-        },
-        {
-          _id: 2,
-          image: meal1,
-          name: "1/4 ROTISSERIE MEAL",
-          rating: "4.5",
-          price: 1500,
-          preprice: 2300,
-          discount: "-5%",
-        },
-        {
-          _id: 3,
-          image: meal2,
-          name: "BIGBOYZ MEAL",
-          rating: "4.5",
-          price: 1200,
-          preprice: 1900,
-          discount: "-8%",
-        },
-        {
-          _id: 4,
-          image: meal3,
-          name: "REFUEL MAX",
-          rating: "4.7",
-          price: 700,
-          preprice: 1000,
-          discount: "-10%",
-        },
-        {
-          _id: 5,
-          image: meal4,
-          name: "REFUEL MEAL",
-          rating: "4.9",
-          price: 1250,
-          preprice: 1500,
-          discount: "-13%",
-        },
-        {
-          _id: 6,
-          image: meal5,
-          name: "REFUEL MEAL (SPAGHETTI)",
-          rating: "4.5",
-          price: 1700,
-          preprice: 2000,
-          discount: "-13%",
-        },
-      ],
+      currentRate: 0,
+      products: []
     };
   },
   methods: {
+    async getItems() {
+      const authors = await axios
+        .get(process.env.LOCAL_URL + '/data.json')
+        .then(res => res.data)
+
+      console.log("authors", authors);
+
+      this.products = authors
+      // return { authors }
+    },
+
     numberWithCommas(x) {
       if (!x) {
         return;
       }
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+      x = x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+      console.log("numberWithCommas", x);
     },
+
+    async convertToNGN(price) {
+      const rate = await axios
+        .get(process.env.BASE_URL + "?base=USD")
+        .then(res => res.data)
+
+      console.log('rate', rate.rates.NGN * price);
+
+      price = rate.rates.NGN * price
+
+      this.numberWithCommas(price)
+    },
+
+
+
+    fformatPrice(price) {
+      if (!price) {
+        return
+      }
+      price = price.substring(1);
+
+      console.log("formatPrice", price);
+      this.convertToNGN(price)
+    },
+
+    async formatPrice(price) {
+      if (!price) {
+        return
+      }
+      price = price.substring(1);
+
+      console.log("formatPrice", price);
+      // this.convertToNGN(price)
+
+      await axios
+        .get(process.env.BASE_URL + "?base=USD")
+        .then(res => {
+          const rate = res.data
+          console.log('rate', rate.rates.NGN * price);
+
+          price = Math.ceil(rate.rates.NGN * price)
+
+          price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+          console.log('price', price);
+
+          return price
+        }, (error) => {
+          console.log(error);
+        });
+
+
+    },
+
     setProductDetails(product) {
       this.modalProduct = product;
       this.modalVisible = true;
       this.count = 1
     },
+
     ...mapActions("cart", ["addProductToCart"]),
+
     ...mapActions("cart", ["removeProductFromCart"]),
+
     removeFromCart(product) {
       this.removeProductFromCart(product);
       this.$notification.success({
@@ -241,14 +228,15 @@ export default {
         description: "Product successfully removed from cart",
       });
     },
+
     addToCart(product) {
       if (this.count == 0) return
       this.addProductToCart({
         product: product,
-        quantity: this.count,
+        quantity: this.count * product.quantity,
+        count: this.count,
         name: product.name,
         price: product.price,
-        preprice: product.preprice,
       });
       this.$notification.success({
         message: "Success",
@@ -256,10 +244,19 @@ export default {
       });
     },
   },
+  mounted() {
+    this.getItems()
+    this.convertToNGN()
+  }
 };
 </script>
 
 <style>
+.cards {
+  display: grid;
+  grid-template-columns: auto auto auto auto,
+}
+
 .title-head {
   color: #c22429;
   font-weight: 600;
@@ -323,16 +320,22 @@ export default {
   border-color: #c22429;
 }
 
+.meal_card {
+  height: 200px;
+}
+
 .card-major {
   bottom: 5.35%;
   background: #ffffff;
   /* box-shadow: 0px 4px 21px rgba(0, 0, 0, 0.12); */
   border-radius: 12px 12px 0px 0px;
+  margin: auto;
   margin-bottom: 25px;
   margin-top: 25px;
-  margin-right: 7px;
-  margin-left: 7px;
-  max-width: 390px;
+  cursor: pointer;
+  /* margin-right: 7px;
+  margin-left: 7px; */
+  max-width: 300px;
   position: relative;
 }
 
