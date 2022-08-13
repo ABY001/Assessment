@@ -11,7 +11,8 @@ export const getters = {
         let total = 0;
 
         state.storeCart.forEach((item) => {
-            total += item.product.price * item.count;
+            const price = item.price.substring(1)
+            total += +price * item.count;
         });
 
         return total;
@@ -50,17 +51,15 @@ export const mutations = {
             return item.product.name !== product.name;
         });
     },
-    UPDATE_CART(state, { product, quantity }) {
+    UPDATE_CART(state, { product, quantity, count }) {
 
         let productInCart = state.storeCart.find((item) => {
             return item.product.name === product.name;
         });
 
-        console.log(productInCart);
-
         if (productInCart) {
-            console.log(productInCart.quantity, quantity);
             productInCart.quantity = quantity;
+            productInCart.count = count;
             return;
         }
     },
@@ -89,8 +88,8 @@ export const actions = {
     removeProductFromCart: ({ commit }, product) => {
         commit("REMOVE_PRODUCT_FROM_CART", product);
     },
-    updateCart: ({ commit }, { product, quantity }) => {
-        commit("UPDATE_CART", { product, quantity });
+    updateCart: ({ commit }, { product, quantity, count }) => {
+        commit("UPDATE_CART", { product, quantity, count });
     },
     clearCartItems: ({ commit }) => {
         commit("CLEAR_CART_ITEMS");

@@ -119,6 +119,7 @@ export default {
       modalVisible: false,
       count: 1,
       currentRate: 0,
+      rate: 0,
       products: []
     };
   },
@@ -133,52 +134,31 @@ export default {
       this.products = authors
     },
 
-    // numberWithCommas(x) {
-    //   if (!x) {
-    //     return;
-    //   }
+    getCurrencyRate() {
+      axios.get(process.env.RATE_URL + "?base=USD")
+        .then((res) => {
 
-    //   x = x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          console.log("rate", res?.data.rates.NGN);
 
-    //   console.log("numberWithCommas", x);
-    // },
+          this.rate = res?.data.rates.NGN
+        })
+    },
 
-    // async convertToNGN(price) {
-    //   const rate = await axios
-    //     .get(process.env.BASE_URL + "?base=USD")
-    //     .then(res => res.data)
-
-    //   console.log('rate', rate.rates.NGN * price);
-
-    //   price = rate.rates.NGN * price
-
-    //   this.numberWithCommas(price)
-    // },
-
-    async formatPrice(price) {
+    formatPrice(price) {
       if (!price) {
         return
       }
       price = price.substring(1);
 
-      console.log("formatPrice", price);
+      price = +price
 
-      await axios
-        .get(process.env.RATE_URL + "?base=USD")
-        .then(res => {
-          const rate = res.data
-          console.log('rate', rate.rates.NGN * price);
+      price = (this.rate * price).toFixed(2);
 
-          price = Math.ceil(rate.rates.NGN * price)
+      price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
-          price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      console.log('price', price);
 
-          console.log('price', price);
-
-          return price
-        }, (error) => {
-          console.log(error);
-        });
+      return price
     },
 
     setProductDetails(product) {
@@ -216,6 +196,7 @@ export default {
   },
   mounted() {
     this.getItems()
+    this.getCurrencyRate()
   }
 };
 </script>

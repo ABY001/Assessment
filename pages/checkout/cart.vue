@@ -13,10 +13,9 @@
                   item.product.name
               }}</a-row>
               <a-row class="meal_price" type="flex" justify="start">
-                <span class="price">&#8358;{{ numberWithCommas(item.product.price) }}</span>
-                <span class="preprice">
-                  <s>{{ numberWithCommas(item.product.preprice) }}</s>
-                </span>
+                <span class="caption">Unit Pice: &nbsp; </span>
+                <span class="price">&#8358;{{ formatPrice(item.product.price)
+                }}</span>
               </a-row>
             </a-col>
 
@@ -39,7 +38,7 @@
       <a-row type="flex" justify="end" style="margin-top: 25px; margin-right: 40px">
         <a-col>
           <a-row type="flex" justify="start" class="total_label">Total</a-row>
-          <a-row type="flex" justify="start" class="total">&#8358;{{ cartTotalPrice ? numberWithCommas(cartTotalPrice) :
+          <a-row type="flex" justify="start" class="total">&#8358;{{ cartTotalPrice ? formatTotal(cartTotalPrice) :
               0
           }}</a-row>
         </a-col>
@@ -58,6 +57,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapGetters, mapActions } from "vuex";
 import deletes from "~/assets/icon/deletes.svg";
 import plus from "~/assets/icon/plus.svg";
@@ -70,7 +70,8 @@ export default {
   },
   data() {
     return {
-      loading: false
+      loading: false,
+      rate: 0
     }
   },
   computed: {
@@ -80,18 +81,45 @@ export default {
     ...mapGetters("cart", ["cartTotalPrice"]),
   },
   methods: {
-    numberWithCommas(x) {
-      if (!x) {
-        return;
-      }
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    getCurrencyRate() {
+      axios.get(process.env.RATE_URL + "?base=USD")
+        .then((res) => {
+          this.rate = res?.data.rates.NGN
+        })
     },
+
+    formatPrice(price) {
+      if (!price) {
+        return
+      }
+      price = price.substring(1);
+
+      price = +price
+
+      price = (this.rate * price).toFixed(2);
+
+      price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+      return price
+    },
+
+    formatTotal(price) {
+      if (!price) {
+        return
+      }
+
+      price = (this.rate * price).toFixed(2);
+
+      price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+      return price
+    },
+
     ...mapActions("cart", ["updateCart", "clearCartItems", "removeProductFromCart"]),
     updateCount(product, quantity, ops) {
       let newCount, baseQuantity, count;
       baseQuantity = product.quantity;
       count = quantity / baseQuantity;
-      console.log('baseQuantity', baseQuantity, 'count', count);
 
       if (ops) {
         newCount = count + 1;
@@ -100,8 +128,9 @@ export default {
         newCount = count - 1;
       }
       let newQuantity = baseQuantity * newCount
-      console.log(newCount, newQuantity, product);
-      this.updateCart({ product: product, quantity: newQuantity });
+
+      console.log(newQuantity, "::::::::::");
+      this.updateCart({ product: product, quantity: newQuantity, count: newCount });
     },
     deleteCount(product) {
       this.removeProductFromCart(product)
@@ -122,6 +151,10 @@ export default {
       }, 1000);
     }
   },
+
+  mounted() {
+    this.getCurrencyRate()
+  }
 };
 </script>
 
@@ -140,6 +173,12 @@ export default {
   font-weight: bold;
   padding: 5px 10px;
   margin-right: 15px;
+}
+
+.caption {
+  color: black;
+  font-weight: bold;
+  padding: 5px 0;
 }
 
 .preprice {
